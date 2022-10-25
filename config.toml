@@ -1,0 +1,13 @@
+[extbus]
+
+[intio]
+pin_i1 = 23
+pin_o1 = 24
+pin_i2 = 25
+pin_o2 = 26
+active_input = "High"
+active_output = "Low"
+
+[iobus]
+
+[ledmatrix]

@@ -1,0 +1,10 @@
+[package]
+name = "wshmch_test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0.147", features = ["derive"] }
+toml = "0.5.9"
+clap = { version = "4.0.18", features = ["derive"] }
+gpio = "0.4.1"
