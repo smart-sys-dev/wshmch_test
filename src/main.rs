@@ -1,7 +1,9 @@
 use clap::{Parser, ValueEnum};
 use intio::IntioConfig;
 use iobus::IobusConfig;
+use ledmatrix::LedmatrixConfig;
 
+mod tty;
 mod extbus;
 mod intio;
 mod iobus;
@@ -54,6 +56,19 @@ fn test_iobus(config: &IobusConfig) -> Result<(), ()> {
     }
 }
 
+fn test_ledmatrix(config: &LedmatrixConfig) -> Result<(), ()> {
+    match ledmatrix::test(config) {
+        Ok(descr) => {
+            println!("Module 'Ledmatrix' tested ok: {}", descr);
+            Ok(())
+        },
+        Err(e) => {
+            println!("Module 'Ledmatrix' tested fail: {}", e);
+            Err(())
+        }
+    }
+}
+
 fn main() -> Result<(), ()> {
     let mode = Mode::parse();
     let config = utils::parse_config(&mode.config);
@@ -61,11 +76,12 @@ fn main() -> Result<(), ()> {
         Module::All => {
             test_intio(&config.intio)?;
             test_iobus(&config.iobus)?;
+            test_ledmatrix(&config.ledmatrix)?;
             Ok(())
         },
         Module::Extbus => Err(()),
         Module::Intio => test_intio(&config.intio),
         Module::Iobus => test_iobus(&config.iobus),
-        Module::Ledmatrix => Err(())
+        Module::Ledmatrix => test_ledmatrix(&config.ledmatrix)
     }
 }

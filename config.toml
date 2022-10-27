@@ -1,4 +1,6 @@
 [extbus]
+driver = "/dev/ttyUSB0"
+addr = 0
 
 [intio]
 pin_i1 = 23
@@ -16,7 +18,7 @@ addr = 0
 active_input = "Low"
 active_output = "High"
 input_mask = 1
-output_mask = 99
+output_mask = 254
 
 
 [ledmatrix]

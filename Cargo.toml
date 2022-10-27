@@ -9,3 +9,4 @@ toml = "0.5.9"
 clap = { version = "4.0.18", features = ["derive"] }
 gpio = "0.4.1"
 i2cdev = "0.5.1"
+termios = "0.3.3"
