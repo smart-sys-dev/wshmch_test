@@ -9,5 +9,14 @@ active_input = "High"
 active_output = "Low"
 
 [iobus]
+driver = "/dev/i2c0"
+[[iobus.devices]]
+chip = "PCF8574"
+addr = 0
+active_input = "Low"
+active_output = "High"
+input_mask = 1
+output_mask = 99
+
 
 [ledmatrix]

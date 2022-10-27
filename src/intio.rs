@@ -41,15 +41,17 @@ pub struct IntioConfig {
 	active_output: PinLevel
 }
 
-fn apply_io(input: &mut SysFsGpioInput, output: &mut SysFsGpioOutput, active_input: &PinLevel, active_output: &PinLevel) {
+fn apply_io(input: &mut SysFsGpioInput, output: &mut SysFsGpioOutput, active_input: &PinLevel, active_output: &PinLevel) -> bool {
 	if input.read_value().unwrap() == active_input.as_gpioval() {
 		output.set_value(active_output.as_gpioval()).unwrap();
+		true
 	} else {
 		output.set_value(active_output.inverse().as_gpioval()).unwrap();
+		false
 	}
 }
 
-pub fn test(config: &IntioConfig) {
+pub fn test(config: &IntioConfig) -> Result<String, String>{
 	println!("\n[INTIO] Test begin..");
 	let mut pin_i1 = SysFsGpioInput::open(config.pin_i1).unwrap();
 	let mut pin_o1 = SysFsGpioOutput::open(config.pin_o1).unwrap();
@@ -65,4 +67,5 @@ pub fn test(config: &IntioConfig) {
 		}
 		thread::sleep(Duration::from_millis(10));
 	}
+	Ok(format!("OK"))
 }

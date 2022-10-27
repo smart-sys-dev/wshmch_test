@@ -19,10 +19,8 @@ pub struct Config {
 	pub ledmatrix: LedmatrixConfig
 }
 
-const CONFIG_PATH: &str = "./config.toml";
-
-pub fn parse_config() -> Config {
-	let mut file = File::open(CONFIG_PATH).unwrap();
+pub fn parse_config(path: &str) -> Config {
+	let mut file = File::open(&path).unwrap();
 	let mut buf = Vec::new();
 	file.read_to_end(&mut buf).unwrap();
 	toml::from_slice(&buf).unwrap()
