@@ -6,7 +6,7 @@ pub struct ExtbusConfig {
 	addr: u8
 }
 
-pub fn test(config: &ExtbusConfig) -> Result<String, String> {
+pub fn test(config: &ExtbusConfig) -> Result<(), String> {
 	
-	Ok(format!("OK"))
+	Ok(())
 }

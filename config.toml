@@ -20,5 +20,31 @@ active_output = "High"
 input_mask = 1
 output_mask = 254
 
-
 [ledmatrix]
+driver = "/dev/ttyUSB0"
+fill_delay = 20
+
+[ledpanel]
+driver = "/dev/spi0.0"
+pin_cs = 29
+speed = 10000
+led_delay = 250
+
+[rfid]
+pin_0 = 27
+pin_1 = 28
+
+[cctalk]
+driver = "/dev/ttyUSB0"
+baudrate = 9600
+addr = 2
+
+[ccnet]
+driver = "/dev/ttyUSB0"
+baudrate = 9600
+addr = 2
+
+[terminal]
+driver = "/dev/ttyUSB0"
+baudrate = 9600
+addr = 2

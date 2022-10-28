@@ -51,7 +51,7 @@ fn apply_io(input: &mut SysFsGpioInput, output: &mut SysFsGpioOutput, active_inp
 	}
 }
 
-pub fn test(config: &IntioConfig) -> Result<String, String>{
+pub fn test(config: &IntioConfig) -> Result<(), String>{
 	println!("\n[INTIO] Test begin..");
 	let mut pin_i1 = SysFsGpioInput::open(config.pin_i1).unwrap();
 	let mut pin_o1 = SysFsGpioOutput::open(config.pin_o1).unwrap();
@@ -67,5 +67,5 @@ pub fn test(config: &IntioConfig) -> Result<String, String>{
 		}
 		thread::sleep(Duration::from_millis(10));
 	}
-	Ok(format!("OK"))
+	Ok(())
 }

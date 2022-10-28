@@ -1,13 +1,14 @@
 use clap::{Parser, ValueEnum};
-use intio::IntioConfig;
-use iobus::IobusConfig;
-use ledmatrix::LedmatrixConfig;
 
-mod tty;
 mod extbus;
 mod intio;
 mod iobus;
 mod ledmatrix;
+mod ledpanel;
+mod ccnet_dev;
+mod cctalk_dev;
+mod rfid;
+mod terminal;
 mod utils;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, ValueEnum)]
@@ -16,7 +17,12 @@ enum Module {
     Extbus,
     Intio,
     Iobus,
-    Ledmatrix
+    Ledmatrix,
+    Ledpanel,
+    Ccnet,
+    Cctalk,
+    Terminal,
+    Rfid
 }
 
 #[derive(Parser, Debug)]
@@ -30,40 +36,14 @@ struct Mode {
     config: String
 }
 
-fn test_intio(config: &IntioConfig) -> Result<(), ()> {
-    match intio::test(config) {
-        Ok(descr) => {
-            println!("Module 'InternalIO' tested ok: {}", descr);
+fn print_test<T>(name: &str, config: &T, func: fn(&T) -> Result<(), String>) -> Result<(), ()> {
+    match func(config) {
+        Ok(_) => {
+            println!("Module '{}' tested ok", name);
             Ok(())
         },
         Err(e) => {
-            println!("Module 'InternalIO' tested fail: {}", e);
-            Err(())
-        }
-    }
-}
-
-fn test_iobus(config: &IobusConfig) -> Result<(), ()> {
-    match iobus::test(config) {
-        Ok(descr) => {
-            println!("Module 'IO Bus' tested ok: {}", descr);
-            Ok(())
-        },
-        Err(e) => {
-            println!("Module 'IO Bus' tested fail: {}", e);
-            Err(())
-        }
-    }
-}
-
-fn test_ledmatrix(config: &LedmatrixConfig) -> Result<(), ()> {
-    match ledmatrix::test(config) {
-        Ok(descr) => {
-            println!("Module 'Ledmatrix' tested ok: {}", descr);
-            Ok(())
-        },
-        Err(e) => {
-            println!("Module 'Ledmatrix' tested fail: {}", e);
+            println!("Module '{}' tested fail: {}", name, e);
             Err(())
         }
     }
@@ -74,14 +54,24 @@ fn main() -> Result<(), ()> {
     let config = utils::parse_config(&mode.config);
     match mode.module {
         Module::All => {
-            test_intio(&config.intio)?;
-            test_iobus(&config.iobus)?;
-            test_ledmatrix(&config.ledmatrix)?;
+            print_test("Internal IO", &config.intio, intio::test)?;
+            print_test("IO Bus", &config.iobus, iobus::test)?;
+            print_test("Ledmatrix", &config.ledmatrix, ledmatrix::test)?;
+            print_test("Ledpanel", &config.ledpanel, ledpanel::test)?;
+            print_test("Rfid", &config.rfid, rfid::test)?;
+            print_test("Ccnet", &config.ccnet, ccnet_dev::test)?;
+            print_test("Cctalk", &config.cctalk, cctalk_dev::test)?;
+            print_test("Terminal", &config.terminal, terminal::test)?;
             Ok(())
         },
         Module::Extbus => Err(()),
-        Module::Intio => test_intio(&config.intio),
-        Module::Iobus => test_iobus(&config.iobus),
-        Module::Ledmatrix => test_ledmatrix(&config.ledmatrix)
+        Module::Intio => print_test("Internal IO", &config.intio, intio::test),
+        Module::Iobus => print_test("IO Bus", &config.iobus, iobus::test),
+        Module::Ledmatrix => print_test("Ledmatrix", &config.ledmatrix, ledmatrix::test),
+        Module::Ledpanel => print_test("Ledpanel", &config.ledpanel, ledpanel::test),
+        Module::Rfid => print_test("Rfid", &config.rfid, rfid::test),
+        Module::Ccnet => print_test("Ccnet", &config.ccnet, ccnet_dev::test),
+        Module::Cctalk => print_test("Cctalk", &config.cctalk, cctalk_dev::test),
+        Module::Terminal => print_test("Terminal", &config.terminal, terminal::test)
     }
 }

@@ -6,17 +6,27 @@ use std::thread;
 
 use serde::Deserialize;
 
+use crate::ccnet_dev::CcnetDevConfig;
+use crate::cctalk_dev::CctalkDevConfig;
 use crate::extbus::ExtbusConfig;
 use crate::intio::IntioConfig;
 use crate::iobus::IobusConfig;
 use crate::ledmatrix::LedmatrixConfig;
+use crate::ledpanel::LedpanelConfig;
+use crate::rfid::RfidConfig;
+use crate::terminal::TerminalConfig;
 
 #[derive(Deserialize)]
 pub struct Config {
 	pub extbus: ExtbusConfig,
 	pub intio: IntioConfig,
 	pub iobus: IobusConfig,
-	pub ledmatrix: LedmatrixConfig
+	pub ledmatrix: LedmatrixConfig,
+	pub ledpanel: LedpanelConfig,
+	pub rfid: RfidConfig,
+	pub terminal: TerminalConfig,
+	pub ccnet: CcnetDevConfig,
+	pub cctalk: CctalkDevConfig
 }
 
 pub fn parse_config(path: &str) -> Config {

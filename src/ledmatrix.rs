@@ -1,7 +1,8 @@
 use std::{time::Duration, thread};
 
 use serde::Deserialize;
-use crate::{tty::Tty, utils};
+use serialport::SerialPort;
+use crate::utils;
 
 const DISPLAY_WIDTH: u32 = 64;
 const DISPLAY_HEIGHT: u32 = 32;
@@ -18,20 +19,24 @@ pub struct LedmatrixConfig {
 }
 
 /// Send encoded draw data to display
-fn send_draw_data(tty: &mut Tty, buf: &[u8]) {
+fn send_draw_data(tty: &mut Box<dyn SerialPort>, buf: &[u8]) {
     let break_byte: [u8;1] = [0;1];
-    tty.speed(TTY_BREAK_SPEED);
-    tty.write(&break_byte);
+	tty.set_baud_rate(TTY_BREAK_SPEED).unwrap();
+    tty.write(&break_byte).unwrap();
     thread::sleep(BREAK_DELAY);
-    tty.speed(TTY_DATA_SPEED);
-    tty.write(&buf);
+    tty.set_baud_rate(TTY_DATA_SPEED).unwrap();
+	tty.write(&buf).unwrap();
 }
 
-pub fn test(config: &LedmatrixConfig) -> Result<String, String> {
+pub fn test(config: &LedmatrixConfig) -> Result<(), String> {
 	println!("\n[LEDMATRIX] Test begin..");
 	println!("Display should be filling of white color..");
 	let mut dd_buf: [u8;DRAW_DATA_SIZE] = [0;DRAW_DATA_SIZE];
-	let mut tty_dev = Tty::new(&config.driver, TTY_DATA_SPEED, true);
+	let mut serial = match serialport::new(&config.driver, TTY_DATA_SPEED).open() {
+		Ok(port) => port,
+		Err(e) => return Err(format!("Fail to open serial port: {}", e.to_string()))
+	};
+
 	let exiter = utils::Exiter::new();
 	let mut i = 0;
 	loop {
@@ -40,11 +45,11 @@ pub fn test(config: &LedmatrixConfig) -> Result<String, String> {
 		if i >= DRAW_DATA_SIZE {
 			i = 0;
 		}
-		send_draw_data(&mut tty_dev, &dd_buf);
+		send_draw_data(&mut serial, &dd_buf);
 		if exiter.check() {
 			break;
 		}
 		thread::sleep(Duration::from_millis(config.fill_delay as u64));
 	}
-	Ok(format!("OK"))
+	Ok(())
 }

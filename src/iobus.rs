@@ -105,7 +105,7 @@ fn read_dev(bus: &mut LinuxI2CBus, dev: &IoBusDevice) -> Result<bool, String> {
 	}
 }
 
-pub fn test(config: &IobusConfig) -> Result<String, String> {
+pub fn test(config: &IobusConfig) -> Result<(), String> {
 	println!("\n[IOBUS] Test begin..");
 	let mut bus = LinuxI2CBus::new(&config.driver).unwrap();
 	for dev in &config.devices {
@@ -137,5 +137,5 @@ pub fn test(config: &IobusConfig) -> Result<String, String> {
 		thread::sleep(CYCLE_DELAY);
 	}
 
-	Ok(format!("OK"))
+	Ok(())
 }
