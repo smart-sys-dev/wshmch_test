@@ -5,9 +5,11 @@ mod intio;
 mod iobus;
 mod ledmatrix;
 mod ledpanel;
+mod ccnet;
 mod ccnet_dev;
 mod cctalk_dev;
-mod rfid;
+mod wiegand;
+mod wiegand_dev;
 mod terminal;
 mod utils;
 
@@ -58,7 +60,7 @@ fn main() -> Result<(), ()> {
             print_test("IO Bus", &config.iobus, iobus::test)?;
             print_test("Ledmatrix", &config.ledmatrix, ledmatrix::test)?;
             print_test("Ledpanel", &config.ledpanel, ledpanel::test)?;
-            print_test("Rfid", &config.rfid, rfid::test)?;
+            print_test("Rfid", &config.rfid, wiegand_dev::test)?;
             print_test("Ccnet", &config.ccnet, ccnet_dev::test)?;
             print_test("Cctalk", &config.cctalk, cctalk_dev::test)?;
             print_test("Terminal", &config.terminal, terminal::test)?;
@@ -69,7 +71,7 @@ fn main() -> Result<(), ()> {
         Module::Iobus => print_test("IO Bus", &config.iobus, iobus::test),
         Module::Ledmatrix => print_test("Ledmatrix", &config.ledmatrix, ledmatrix::test),
         Module::Ledpanel => print_test("Ledpanel", &config.ledpanel, ledpanel::test),
-        Module::Rfid => print_test("Rfid", &config.rfid, rfid::test),
+        Module::Rfid => print_test("Rfid", &config.rfid, wiegand_dev::test),
         Module::Ccnet => print_test("Ccnet", &config.ccnet, ccnet_dev::test),
         Module::Cctalk => print_test("Cctalk", &config.cctalk, cctalk_dev::test),
         Module::Terminal => print_test("Terminal", &config.terminal, terminal::test)

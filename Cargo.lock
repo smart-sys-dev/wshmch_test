@@ -526,6 +526,7 @@ dependencies = [
  "gpio",
  "i2cdev",
  "serde",
+ "serial",
  "serialport",
  "spidev",
  "termios 0.3.3",
